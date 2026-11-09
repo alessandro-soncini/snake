@@ -48,6 +48,9 @@ int main(void) {
 
 	while (!WindowShouldClose()) {
 
+		size_t prev_dir_x = dir_x;
+		size_t prev_dir_y = dir_y;
+
 		if (IsKeyDown(KEY_RIGHT)) {
 			dir_x = 1;
 			dir_y = 0;
@@ -60,6 +63,15 @@ int main(void) {
 		} else if (IsKeyDown(KEY_UP)) {
 			dir_x = 0;
 			dir_y = -1;
+		}
+
+		if (snake[snake_len - 1].x - snake[snake_len - 2].x == dir_x && snake_len > 1) {
+			dir_x = prev_dir_x;
+			dir_y = prev_dir_y;
+		}
+		if (snake[snake_len - 1].y - snake[snake_len - 2].y == dir_y && snake_len > 1) {
+			dir_x = prev_dir_x;
+			dir_y = prev_dir_y;
 		}
 
 		update_timer -= GetFrameTime();
