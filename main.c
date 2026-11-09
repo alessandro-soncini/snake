@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include "raylib.h"
@@ -38,8 +39,8 @@ int main(void) {
 	snake_len++;
 
 	Apple apple = (Apple){
-		.x = GetRandomValue(0, WIDTH),
-		.y = GetRandomValue(0, HEIGHT)
+		.x = GetRandomValue(0, WIDTH - 1),
+		.y = GetRandomValue(0, HEIGHT - 1)
 	};
 
 	while (!WindowShouldClose()) {
@@ -66,15 +67,15 @@ int main(void) {
 			snake_len++;
 
 			bool touches_snake = true;
-			apple.x = GetRandomValue(0, WIDTH);
-			apple.y = GetRandomValue(0, HEIGHT);
+			apple.x = GetRandomValue(0, WIDTH - 1);
+			apple.y = GetRandomValue(0, HEIGHT - 1);
 			do {			
 				touches_snake = false;
 				for (size_t i = 0; i < snake_len + 1; ++i) {
 					if (snake[i].x == apple.x && snake[i].y == apple.y) {
 						touches_snake = true;
-						apple.x = GetRandomValue(0, WIDTH);
-						apple.y = GetRandomValue(0, HEIGHT);
+						apple.x = GetRandomValue(0, WIDTH - 1);
+						apple.y = GetRandomValue(0, HEIGHT - 1);
 					}
 				}
 			} while (touches_snake);
@@ -83,6 +84,37 @@ int main(void) {
 				snake[i] = snake[i + 1];
 			}
 		}		
+
+		for (size_t i = 0; i < snake_len - 1; ++i) {
+			if (snake[i].x == snake[snake_len - 1].x && snake[i].y == snake[snake_len - 1].y) {				
+				memset(snake, 0, sizeof(Snake) * WIDTH * HEIGHT);
+				snake_len = 0;
+				dir_x = 1;
+				dir_y = 0;
+
+				snake[0] = (Snake){
+					.active = true,
+					.x = WIDTH / 2,
+					.y = HEIGHT / 2
+				};
+
+				snake_len++;
+
+				bool touches_snake = true;
+				apple.x = GetRandomValue(0, WIDTH - 1);
+				apple.y = GetRandomValue(0, HEIGHT - 1);
+				do {			
+					touches_snake = false;
+					for (size_t i = 0; i < snake_len + 1; ++i) {
+						if (snake[i].x == apple.x && snake[i].y == apple.y) {
+							touches_snake = true;
+							apple.x = GetRandomValue(0, WIDTH - 1);
+							apple.y = GetRandomValue(0, HEIGHT - 1);
+						}
+					}
+				} while (touches_snake);
+			}
+		}
 
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
