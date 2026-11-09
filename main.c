@@ -179,14 +179,14 @@ int main(void) {
 		DrawRectangle(apple.x * screen_width / WIDTH, apple.y * screen_height / HEIGHT, screen_width / WIDTH, screen_height / HEIGHT, RED);
 		
 		for (size_t x = 0; x < WIDTH; ++x) {
-			DrawLine(screen_width / WIDTH * x, 0, screen_width /  WIDTH * x, screen_height, BLACK);
+			DrawLine(screen_width / WIDTH * x, 0, screen_width /  WIDTH * x, screen_height, LIGHTGRAY);
 		}
 
 		for (size_t y = 0; y < HEIGHT; ++y) {
-			DrawLine(0, screen_height / HEIGHT * y, screen_height, screen_height / HEIGHT * y, BLACK);
+			DrawLine(0, screen_height / HEIGHT * y, screen_height, screen_height / HEIGHT * y, LIGHTGRAY);
 		}
 
-		DrawFPS(8, 8);
+		// DrawFPS(8, 8);
 
 		EndDrawing();
 	}
