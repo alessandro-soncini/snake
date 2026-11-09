@@ -48,8 +48,8 @@ int main(void) {
 
 	while (!WindowShouldClose()) {
 
-		size_t prev_dir_x = dir_x;
-		size_t prev_dir_y = dir_y;
+		int prev_dir_x = dir_x;
+		int prev_dir_y = dir_y;
 
 		if (IsKeyDown(KEY_RIGHT)) {
 			dir_x = 1;
