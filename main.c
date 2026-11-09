@@ -21,10 +21,11 @@ typedef struct {
 	int y;
 } Apple;
 
+const float max_update_timer = 0.2;
+
 int main(void) {
 	InitWindow(screen_width, screen_height, "Snake");
-	SetTargetFPS(10);
-
+	
 	Snake snake[WIDTH * HEIGHT];
 	memset(snake, 0, sizeof(Snake) * WIDTH * HEIGHT);
 	size_t snake_len = 0;
@@ -43,6 +44,8 @@ int main(void) {
 		.y = GetRandomValue(0, HEIGHT - 1)
 	};
 
+	float update_timer = max_update_timer;
+
 	while (!WindowShouldClose()) {
 
 		if (IsKeyDown(KEY_RIGHT)) {
@@ -59,34 +62,69 @@ int main(void) {
 			dir_y = -1;
 		}
 
-		snake[snake_len] = snake[snake_len-1];
-		snake[snake_len].x += dir_x;
-		snake[snake_len].y += dir_y;
+		update_timer -= GetFrameTime();
 
-		if (snake[snake_len].x == apple.x && snake[snake_len].y == apple.y) {
-			snake_len++;
+		if (update_timer <= 0) {
+			snake[snake_len] = snake[snake_len-1];
+			snake[snake_len].x += dir_x;
+			snake[snake_len].y += dir_y;
 
-			bool touches_snake = true;
-			apple.x = GetRandomValue(0, WIDTH - 1);
-			apple.y = GetRandomValue(0, HEIGHT - 1);
-			do {			
-				touches_snake = false;
-				for (size_t i = 0; i < snake_len + 1; ++i) {
-					if (snake[i].x == apple.x && snake[i].y == apple.y) {
-						touches_snake = true;
-						apple.x = GetRandomValue(0, WIDTH - 1);
-						apple.y = GetRandomValue(0, HEIGHT - 1);
+			if (snake[snake_len].x == apple.x && snake[snake_len].y == apple.y) {
+				snake_len++;
+
+				bool touches_snake = true;
+				apple.x = GetRandomValue(0, WIDTH - 1);
+				apple.y = GetRandomValue(0, HEIGHT - 1);
+				do {			
+					touches_snake = false;
+					for (size_t i = 0; i < snake_len + 1; ++i) {
+						if (snake[i].x == apple.x && snake[i].y == apple.y) {
+							touches_snake = true;
+							apple.x = GetRandomValue(0, WIDTH - 1);
+							apple.y = GetRandomValue(0, HEIGHT - 1);
+						}
 					}
+				} while (touches_snake);
+			} else {
+				for (size_t i = 0; i < snake_len; ++i) {
+					snake[i] = snake[i + 1];
 				}
-			} while (touches_snake);
-		} else {
-			for (size_t i = 0; i < snake_len; ++i) {
-				snake[i] = snake[i + 1];
-			}
-		}		
+			}		
 
-		for (size_t i = 0; i < snake_len - 1; ++i) {
-			if (snake[i].x == snake[snake_len - 1].x && snake[i].y == snake[snake_len - 1].y) {				
+			for (size_t i = 0; i < snake_len - 1; ++i) {
+				if (snake[i].x == snake[snake_len - 1].x && snake[i].y == snake[snake_len - 1].y) {				
+					memset(snake, 0, sizeof(Snake) * WIDTH * HEIGHT);
+					snake_len = 0;
+					dir_x = 1;
+					dir_y = 0;
+
+					snake[0] = (Snake){
+						.active = true,
+						.x = WIDTH / 2,
+						.y = HEIGHT / 2
+					};
+
+					snake_len++;
+
+					bool touches_snake = true;
+					apple.x = GetRandomValue(0, WIDTH - 1);
+					apple.y = GetRandomValue(0, HEIGHT - 1);
+					do {			
+						touches_snake = false;
+						for (size_t i = 0; i < snake_len + 1; ++i) {
+							if (snake[i].x == apple.x && snake[i].y == apple.y) {
+								touches_snake = true;
+								apple.x = GetRandomValue(0, WIDTH - 1);
+								apple.y = GetRandomValue(0, HEIGHT - 1);
+							}
+						}
+					} while (touches_snake);
+				}
+			}
+
+			if (snake[snake_len - 1].x < 0 || snake[snake_len - 1].x > WIDTH - 1 ||
+				snake[snake_len - 1].y < 0 || snake[snake_len - 1].y > HEIGHT - 1) {
+			
 				memset(snake, 0, sizeof(Snake) * WIDTH * HEIGHT);
 				snake_len = 0;
 				dir_x = 1;
@@ -114,6 +152,8 @@ int main(void) {
 					}
 				} while (touches_snake);
 			}
+
+			update_timer = max_update_timer;
 		}
 
 		BeginDrawing();
