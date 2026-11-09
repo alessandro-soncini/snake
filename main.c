@@ -71,7 +71,7 @@ int main(void) {
 			do {			
 				touches_snake = false;
 				for (size_t i = 0; i < snake_len + 1; ++i) {
-					if (snake[snake_len].x == apple.x && snake[snake_len].y == apple.y) {
+					if (snake[i].x == apple.x && snake[i].y == apple.y) {
 						touches_snake = true;
 						apple.x = GetRandomValue(0, WIDTH);
 						apple.y = GetRandomValue(0, HEIGHT);
