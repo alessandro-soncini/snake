@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "raylib.h"
@@ -25,6 +26,8 @@ const float max_update_timer = 0.2;
 
 int main(void) {
 	InitWindow(screen_width, screen_height, "Snake");
+
+	int score = 0;
 	
 	Snake snake[WIDTH * HEIGHT];
 	memset(snake, 0, sizeof(Snake) * WIDTH * HEIGHT);
@@ -83,6 +86,7 @@ int main(void) {
 
 			if (snake[snake_len].x == apple.x && snake[snake_len].y == apple.y) {
 				snake_len++;
+				score++;
 
 				bool touches_snake = true;
 				apple.x = GetRandomValue(0, WIDTH - 1);
@@ -171,6 +175,18 @@ int main(void) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 
+		for (size_t y = 0; y < HEIGHT; ++y) {
+			for (size_t x = 0; x < WIDTH; ++x) {
+				if (y % 2 == 0) {
+					if (x % 2 != 0)
+					DrawRectangle(screen_width / WIDTH * x, screen_height / HEIGHT * y, screen_width / WIDTH, screen_height / HEIGHT, LIGHTGRAY);
+				} else {
+					if (x % 2 == 0)
+					DrawRectangle(screen_width / WIDTH * x, screen_height / HEIGHT * y, screen_width / WIDTH, screen_height / HEIGHT, LIGHTGRAY);
+				}
+			}
+		}
+
 		for (size_t i = 0; i < snake_len; ++i) {
 			if (!snake[i].active) continue;
 			DrawRectangle(snake[i].x * screen_width / WIDTH, snake[i].y * screen_height / HEIGHT, screen_width / WIDTH, screen_height / HEIGHT, GREEN);
@@ -178,13 +194,19 @@ int main(void) {
 
 		DrawRectangle(apple.x * screen_width / WIDTH, apple.y * screen_height / HEIGHT, screen_width / WIDTH, screen_height / HEIGHT, RED);
 		
-		for (size_t x = 0; x < WIDTH; ++x) {
-			DrawLine(screen_width / WIDTH * x, 0, screen_width /  WIDTH * x, screen_height, LIGHTGRAY);
-		}
+		// for (size_t x = 0; x < WIDTH; ++x) {
+		// 	DrawLine(screen_width / WIDTH * x, 0, screen_width /  WIDTH * x, screen_height, LIGHTGRAY);
+		// }
 
-		for (size_t y = 0; y < HEIGHT; ++y) {
-			DrawLine(0, screen_height / HEIGHT * y, screen_height, screen_height / HEIGHT * y, LIGHTGRAY);
-		}
+		// for (size_t y = 0; y < HEIGHT; ++y) {
+		// 	DrawLine(0, screen_height / HEIGHT * y, screen_height, screen_height / HEIGHT * y, LIGHTGRAY);
+		// }
+
+		char score_text[128];
+		sprintf(score_text, "%d", score);
+		int score_text_font_size = 48;
+		int score_text_width = MeasureText(score_text, score_text_font_size);
+		DrawText(score_text, (screen_width - score_text_width) / 2, 8, score_text_font_size, BLACK);
 
 		// DrawFPS(8, 8);
 
