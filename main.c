@@ -5,6 +5,8 @@
 #include <string.h>
 #include "raylib.h"
 
+#define LIGHTERGRAY (Color){235, 235, 235, 255}
+
 #define WIDTH 20
 #define HEIGHT 20
 
@@ -135,6 +137,8 @@ int main(void) {
 							}
 						}
 					} while (touches_snake);
+
+					score = 0;
 				}
 			}
 
@@ -167,6 +171,8 @@ int main(void) {
 						}
 					}
 				} while (touches_snake);
+
+				score = 0;
 			}
 
 			update_timer = max_update_timer;
@@ -179,10 +185,10 @@ int main(void) {
 			for (size_t x = 0; x < WIDTH; ++x) {
 				if (y % 2 == 0) {
 					if (x % 2 != 0)
-					DrawRectangle(screen_width / WIDTH * x, screen_height / HEIGHT * y, screen_width / WIDTH, screen_height / HEIGHT, LIGHTGRAY);
+					DrawRectangle(screen_width / WIDTH * x, screen_height / HEIGHT * y, screen_width / WIDTH, screen_height / HEIGHT, LIGHTERGRAY);
 				} else {
 					if (x % 2 == 0)
-					DrawRectangle(screen_width / WIDTH * x, screen_height / HEIGHT * y, screen_width / WIDTH, screen_height / HEIGHT, LIGHTGRAY);
+					DrawRectangle(screen_width / WIDTH * x, screen_height / HEIGHT * y, screen_width / WIDTH, screen_height / HEIGHT, LIGHTERGRAY);
 				}
 			}
 		}
